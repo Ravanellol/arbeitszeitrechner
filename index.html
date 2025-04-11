@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <title>Arbeitszeitrechner</title>
+</head>
+<body style="margin:0; padding:0; font-family:'Segoe UI', sans-serif; background:#f2f4f8; color:#333; display:flex; align-items:center; justify-content:center; height:100vh;">
+
+  <div style="background:white; padding:2rem; border-radius:1rem; box-shadow:0 4px 20px rgba(0,0,0,0.1); max-width:400px; width:100%; text-align:center;">
+    <h2 style="margin-bottom:1.5rem; font-size:1.5rem; color:#222;">🕒 Arbeitszeitrechner</h2>
+
+    <label style="display:block; margin-bottom:0.5rem;">
+      Startzeit:
+      <input type="time" id="start" style="width:100%; padding:0.5rem; margin-top:0.2rem; border:1px solid #ccc; border-radius:0.5rem;">
+    </label>
+
+    <label style="display:block; margin-bottom:0.5rem;">
+      Pausenbeginn:
+      <input type="time" id="pauseStart" style="width:100%; padding:0.5rem; margin-top:0.2rem; border:1px solid #ccc; border-radius:0.5rem;">
+    </label>
+
+    <label style="display:block; margin-bottom:0.5rem;">
+      Pausenende:
+      <input type="time" id="pauseEnd" style="width:100%; padding:0.5rem; margin-top:0.2rem; border:1px solid #ccc; border-radius:0.5rem;">
+    </label>
+
+    <label style="display:block; margin-bottom:1rem;">
+      Endzeit:
+      <input type="time" id="end" style="width:100%; padding:0.5rem; margin-top:0.2rem; border:1px solid #ccc; border-radius:0.5rem;">
+    </label>
+
+    <button onclick="berechnen()" style="width:100%; padding:0.75rem; background:#007bff; color:white; border:none; border-radius:0.5rem; font-size:1rem; cursor:pointer;">
+      Berechnen
+    </button>
+
+    <p id="ergebnis" style="margin-top:1.5rem; font-weight:bold;"></p>
+  </div>
+
+  <script>
+    function zeitZuMinuten(zeit) {
+      const [h, m] = zeit.split(":").map(Number);
+      return h * 60 + m;
+    }
+
+    function berechnen() {
+      const start = document.getElementById("start").value;
+      const pauseStart = document.getElementById("pauseStart").value;
+      const pauseEnd = document.getElementById("pauseEnd").value;
+      const end = document.getElementById("end").value;
+
+      if (!start || !pauseStart || !pauseEnd || !end) {
+        document.getElementById("ergebnis").textContent = "Bitte alle Zeiten ausfüllen.";
+        return;
+      }
+
+      const startMin = zeitZuMinuten(start);
+      const pauseStartMin = zeitZuMinuten(pauseStart);
+      const pauseEndMin = zeitZuMinuten(pauseEnd);
+      const endMin = zeitZuMinuten(end);
+
+      const arbeitszeit = (pauseStartMin - startMin) + (endMin - pauseEndMin);
+      const stunden = Math.floor(arbeitszeit / 60);
+      const minuten = arbeitszeit % 60;
+
+      document.getElementById("ergebnis").textContent =
+        `Gearbeitete Zeit: ${stunden} Stunden und ${minuten} Minuten`;
+    }
+  </script>
+</body>
+</html>
